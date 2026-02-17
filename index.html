@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+<head>
+    <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover' />
+    <meta charset='utf-8'>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+    <title>MMA-AVTF</title>
+    
+    <script src="files/assets/269397549/1/Photon-Javascript_SDK.min.js"></script>
+    <script src="files/assets/269397539/1/AgoraRTC_N-4.24.0.js"></script>
+    <script src="playcanvas-stable.min.js"></script>
+    <script src="__settings__.js"></script>
+
+    <style>
+        #ios-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 9999; display: flex; 
+            flex-direction: column; align-items: center; justify-content: center;
+        }
+        #btn-start {
+            padding: 20px 50px; background: #fff; border: none; 
+            border-radius: 50px; font-weight: bold; font-size: 18px; cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="ios-overlay">
+        <img src="logo.png" style="width:120px; margin-bottom:30px;">
+        <button id="btn-start">ENTER METAVERSE</button>
+        <p style="color:#555; margin-top:15px; font-family:sans-serif;">Optimizing for iOS...</p>
+    </div>
+
+    <script src="__modules__.js"></script>
+    
+    <script>
+        const startBtn = document.getElementById('btn-start');
+        
+        startBtn.addEventListener('click', function() {
+            // Remove overlay
+            document.getElementById('ios-overlay').remove();
+
+            // Force unlock Audio Context for iOS
+            if (typeof AudioContext !== 'undefined' || typeof webkitAudioContext !== 'undefined') {
+                const resumeAudio = () => {
+                    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                    if (ctx.state === 'suspended') ctx.resume();
+                };
+                resumeAudio();
+            }
+
+            // Inject the PlayCanvas startup scripts manually
+            const scripts = ["__start__.js", "__loading__.js"];
+            scripts.forEach(src => {
+                const s = document.createElement('script');
+                s.src = src;
+                s.async = false; // Ensure they execute in order
+                document.body.appendChild(s);
+            });
+        });
+    </script>
+</body>
+</html>
